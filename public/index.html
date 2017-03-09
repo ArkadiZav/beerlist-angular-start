@@ -1,11 +1,11 @@
 <html>
 
 <head>
-    <link href="bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <link href="../node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
-<body ng-app="beerList">
+<body ng-app="beerList" ng-controller = "beerCtrl">
     <div class="container">
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
@@ -13,6 +13,20 @@
                 <div class="page-header">
                 </div>
                 <!-- render beers here -->
+                  <div class ="col-md-8 movies">
+
+                    <ul class = "beerStockArray">
+                      <li class = "card-inner col-md-4 ng-scope" ng-repeat="beer in beerObj.beers track by $index">
+                        <p class = "beer-info">
+                            {{beer.name}}, {{beer.style}}, {{beer.abv}}
+                        </p>
+                        <a href="#" class="thumb"><img class = "beer-image" ng-src="{{beer.imageUrl}}"></a>
+                      </li>
+                    </ul>
+                  </div>
+
+
+
                 <form ng-submit="addBeer()">
                     <h3>Add a new beer</h3>
                     <div class="form-group">
@@ -32,7 +46,7 @@
             </div>
         </div>
     </div>
-    <script src="angular/angular.js"></script>
+    <script src="../node_modules/angular/angular.js"></script>
     <script src="js/app.js"></script>
     <script src="js/services/beers.js"></script>
     <script src="js/controllers/mainController.js"></script>
