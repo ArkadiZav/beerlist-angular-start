@@ -1,0 +1,34 @@
+.form-control {
+  width: 50%;
+}
+
+li {
+  font-family: cursive;
+  display: inline-block;
+  float:left;
+  width:300px;
+  height:auto;
+  overflow: auto;
+  margin: 20px;
+  border: 1px solid black;
+  padding: 20px;
+}
+
+ul {
+  list-style-type: none;
+  overflow: auto;
+}
+
+img {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  float:left;
+  height: 150px;
+  width: 100%;
+  overflow: auto;
+}
+
+.thumb {
+  display: block;
+}

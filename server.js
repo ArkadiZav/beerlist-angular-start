@@ -6,7 +6,8 @@ var app = express();
 var request = require('request');
 
 var mongoose = require('mongoose');
-var Beer = require("./BeerModel"); // the "./" tells node that we are requiring a "local" module
+
+var Beer = require("./models/BeerModel"); // the "./" tells node that we are requiring a "local" module
 mongoose.connect("mongodb://localhost/beers");
 
 app.use(express.static('public'));
@@ -94,13 +95,32 @@ app.delete('/beers/:id', function (req, res, next) {
                     PUT Requests
 =======================================================*/
 app.put('/beers/:id', function(req, res, next) {
-  Beer.findOneAndUpdate({ _id: req.params.id }, req.body, function(err, beer) {
+  Beer.findOneAndUpdate({ _id: req.params.id }, req.body, {new: true}, function(err, beer) {
     if (err) {
       console.error(err)
       return next(err);
     } else {
       res.send(beer);
     }
+  });
+});
+
+/*=====================================================
+                  ERROR handle
+=======================================================*/
+// catch 404 and forward to main error handler
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+
+// warning - not for use in production code!
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: err
   });
 });
 
