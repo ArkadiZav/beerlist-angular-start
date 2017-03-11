@@ -1,5 +1,6 @@
-.form-control {
-  width: 50%;
+body {
+  background-color: #87c287;
+  margin: 20px;
 }
 
 li {
@@ -10,7 +11,7 @@ li {
   height:auto;
   overflow: auto;
   margin: 20px;
-  border: 1px solid black;
+  border: 8px outset gainsboro;
   padding: 20px;
 }
 
@@ -27,6 +28,19 @@ img {
   height: 150px;
   width: 100%;
   overflow: auto;
+}
+
+.form-control {
+  width: 40%;
+}
+
+.frame {
+  border-bottom: 6px groove yellowgreen;
+  margin: -10px -1.4em 5px -1.4em;
+}
+
+.remove-button {
+  float:right;
 }
 
 .thumb {

@@ -1,29 +1,83 @@
 app.factory('beerService', function($http) {
-  var beers = [{name: "Carlsberg", ratings: [3, 2], avgRating: 2.5, style: "light", abv: 5, image_url: "http://vector.me/files/images/4/1/41842/carlsberg.png"},
-               {name: "Heiniken", ratings: [4, 5], avgRating: 4.5, style: "imported", abv: 3, image_url: "http://logok.org/wp-content/uploads/2014/06/Heineken-logo-green.png"},
-               {name: "Corona 1", ratings: [4], avgRating: 4, style: "light", abv: 5.9, image_url: "http://fontslogo.com/wp-content/uploads/2013/04/Corona-Logo-Font.jpg"}];
+  var beers = [];
+  var ratings = [1, 2, 3, 4, 5];
+  var isSortAscending = true;
 
-  var beerObj = {beers: beers};
+  var beerObj = {beers: beers, ratings: ratings, sort: isSortAscending};
 
   beerObj.getBeers = function() {
-  // your code
-  }
-
-  beerObj.addBeer = function(name, rating, style, abv, image) {
-    var newBeer = {name: name, ratings:[rating], avgRating:rating, style: style, abv: abv, image_url: image};
-    beerObj.beers.push(newBeer);
-    console.log(beerObj.beers);
+    return $http.get('/beers')
+      .then(function(response) {
+        angular.copy(response.data, beerObj.beers); // copies the data that was received into our beers array
+      }, function(err) {
+        console.error(err)
+      });
   };
 
-  beerObj.removeBeer = function($index) {
-    beerObj.beers.splice($index, 1);
+  beerObj.addBeer = function(name, style, abv, image) {
+    var newBeer = {name: name, ratings:[], style: style, abv: abv, image_url: image};
+    //beerObj.beers.push(newBeer);
+    $http.post('/beers', newBeer);
+    beerObj.getBeers();
   };
 
-  beerObj.addRating = function(beer_rating, $index) {
-    var avgRating = beerObj.beers[$index].avgRating;
-    numOfRatings = beerObj.beers[$index].ratings.length;
-    beerObj.beers[$index].ratings.push(beer_rating);
-    beerObj.beers[$index].avgRating = (avgRating * numOfRatings + parseInt(beer_rating))/(numOfRatings + 1);
+  beerObj.removeBeer = function(id) {
+    //beerObj.beers.splice($index, 1);
+    $http.delete('/beers/' + id);
+    beerObj.getBeers();
+  };
+
+  beerObj.addRating = function(beer_rating, $index, id) {
+    // ## When pressing "select" on select rating: we DON'T WANT to update the database ## //
+    if (typeof(beer_rating) != 'number') {
+      return;
+    }
+
+    var total = 0;
+    var prevAvgRating;
+    var avgRating;
+    var numOfRatings = beerObj.beers[$index].ratings.length;
+    var ratings = beerObj.beers[$index].ratings;
+    var newRatings = [];
+
+    /* ###################### Making a NEW array which is BASED (NOT referencing to) on our array #################### */
+    for (var i = 0; i < numOfRatings; i++) {
+      total += ratings[i];
+      newRatings.push(ratings[i]);
+    }
+
+    newRatings.push(beer_rating);
+
+    prevAvgRating = total / numOfRatings;
+    avgRating = (total + beer_rating) / (numOfRatings + 1);
+    // ###################### WE DON'T WANT TO ALTER OUR DATA! this is the SERVER's job ####################### //
+    //beerObj.beers[$index].ratings.push(beer_rating);
+    //beerObj.beers[$index].avgRating = (total + beer_rating)/(numOfRatings + 1);
+  /*  $http.put('/beers/' + id, beerObj.beers[$index]).then(function(response) {
+      beerObj.getBeers();
+      console.log(response);
+    }) */
+    $http.put('/beers/' + id, {ratings: newRatings, avgRating: avgRating}).then(function(response) {
+      beerObj.getBeers();
+      console.log(response);
+    })
+  };
+
+  beerObj.updateBeers = function($index, id) {
+    $http.put('/beers/' + id, beerObj.beers[$index]).then(function(response) {
+      beerObj.getBeers();
+      console.log(response);
+    })
+  };
+
+  beerObj.sortAscending = function() {
+    beerObj.beers.sort(function(a, b){return a.avgRating - b.avgRating});
+    beerObj.isSortAscending = false;
+  };
+
+  beerObj.sortDescending = function() {
+    beerObj.beers.sort(function(a, b){return b.avgRating - a.avgRating});
+    beerObj.isSortAscending = true;
   };
 
   return {

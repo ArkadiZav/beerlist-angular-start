@@ -1,1 +1,1 @@
-var app = angular.module('beerList', []);
+var app = angular.module('beerList', ["xeditable"]);
