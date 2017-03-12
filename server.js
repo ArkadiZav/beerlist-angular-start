@@ -14,7 +14,7 @@ app.use(express.static('public'));
 app.use(express.static('node_modules'));
 
 var bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 /*=====================================================
@@ -24,6 +24,7 @@ app.get('/beers', function(req, res, next) {
   //res.send('Testing Server')
   Beer.find(function (error, beers) {
     if(error) { return console.error(error); }
+    console.log("got beers");
     console.log(beers);
     res.send(beers);
   });
@@ -77,30 +78,29 @@ app.post('/beers', function (req, res, next) {
 /*=====================================================
                     DELETE Requests
 =======================================================*/
-app.delete('/beers/:id', function (req, res, next) {
-  //res.send('Got a DELETE request');
-  Beer.remove({ _id: req.params.id },
-    function(err) {
-      if (err) {
-        console.error(err)
-        return next(err);
-      }
-      res.send("Beer Deleted");
+app.delete('/beers/:id', function(req, res, next) {
+  Beer.remove({ _id: req.params.id }, function(err) {
+    if (err) {
+      console.error(err)
+      return next(err);
+    } else {
+      res.send("Beer Deleted!");
+    }
   });
-
-  console.log(req.params.id);
-})
+});
 
 /*=====================================================
                     PUT Requests
 =======================================================*/
 app.put('/beers/:id', function(req, res, next) {
-  Beer.findOneAndUpdate({ _id: req.params.id }, req.body, {new: true}, function(err, beer) {
+  Beer.findOneAndUpdate({ _id: req.params.id }, { $push: req.body}, {new: true}, function(err, beer) {
     if (err) {
-      console.error(err)
+      console.error(err);
       return next(err);
     } else {
-      res.send(beer);
+
+      console.log(beer);
+        res.send(beer);
     }
   });
 });

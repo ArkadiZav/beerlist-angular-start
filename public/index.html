@@ -20,10 +20,10 @@
                   <div class ="col-md-12 beers">
 
                      <ul class = "beer-list">
-                      <li ng-repeat = "beer in beerObj.beers track by $index">
-                        <button type="button" class="btn btn-danger remove-button" ng-click="beerObj.removeBeer(beer._id)">Remove</button>
+                      <li ng-repeat = "beer in beers track by $index">
+                        <button type="button" class="btn btn-danger remove-button" ng-click="removeBeer(beer._id)">Remove</button>
                         <p> Select rating: </p>
-                         <!--<select class="form-control" ng-model = "beer_rating" ng-click = "beerObj.addRating(beer_rating, $index, beer._id)">
+                         <!--<select class="form-control" ng-model = "beer_rating" ng-click = ".addRating(beer_rating, $index, beer._id)">
                            <option disabled selected hidden value = ""> Select </option>
                            <option value="1">1</option>
                            <option value="2">2</option>
@@ -31,15 +31,15 @@
                            <option value="4">4</option>
                            <option value="5">5</option>
                          </select> -->
-                         <select class="form-control" ng-model="beer_rating" ng-click = "beerObj.addRating(beer_rating, $index, beer._id)"
-                         ng-options="beerObj.ratings.indexOf(beer_rating) + 1 as beer_rating for beer_rating in beerObj.ratings"></select>
+                         <select class="form-control" ng-model="beer_rating" ng-click = "addRating(beer_rating, $index, beer._id)"
+                         ng-options="ratings.indexOf(beer_rating) + 1 as beer_rating for beer_rating in ratings"></select>
                          <div class = "frame">
                            &nbsp;
                          </div>
-                         <p editable-text = "beer.name" onaftersave="beerObj.updateBeers($index, beer._id)"> Name: {{ beer.name }} </p>
-                         <p editable-text = "beer.style" onaftersave="beerObj.updateBeers($index, beer._id)"> Style: {{ beer.style }} </p>
-                         <p editable-text = "beer.abv" onaftersave="beerObj.updateBeers($index, beer._id)"> ABV: {{ beer.abv }}  </p>
-                         <p ng-hide = "beer.ratings.length == 0" > Average Rating: {{ beer.avgRating }} (by {{beer.ratings.length}} drinker(s))
+                         <p editable-text = "beer.name" onaftersave="updateBeers($index, beer._id)"> Name: {{ beer.name }} </p>
+                         <p editable-text = "beer.style" onaftersave="updateBeers($index, beer._id)"> Style: {{ beer.style }} </p>
+                         <p editable-text = "beer.abv" onaftersave="updateBeers($index, beer._id)"> ABV: {{ beer.abv }}  </p>
+                         <p ng-hide = "beer.ratings.length == 0" > Average Rating: {{ avg(beer) }} (by {{beer.ratings.length}} drinker(s))
                          <p ng-show = "beer.ratings.length == 0" > Average Rating: None yet! Be the first one to rate </p>
                          <!-- If the beer has no ratings, I want to init the avg to 0, so that the sort will work -->
                          <div ng-if = "beer.ratings.length == 0">
@@ -70,10 +70,10 @@
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Image URL" ng-model="image"></input>
                     </div>
-                    <button type="button" class="btn btn-primary" ng-click = "beerObj.addBeer(name, style, abv, image)">Add</button>
+                    <button type="button" class="btn btn-primary" ng-click = "addBeer(name, style, abv, image)">Add</button>
 
-                    <button type="button" class="btn btn-success" ng-show = "beerObj.isSortAscending" ng-click = "beerObj.sortAscending()">Sort (ascending)</button>
-                    <button type="button" class="btn btn-success" ng-hide = "beerObj.isSortAscending" ng-click = "beerObj.sortDescending()">Sort (descending)</button>
+                  <!--  <button type="button" class="btn btn-success" ng-show = "beers.isSortAscending" ng-click = ".sortAscending()">Sort (ascending)</button>
+                    <button type="button" class="btn btn-success" ng-hide = "beers.isSortAscending" ng-click = ".sortDescending()">Sort (descending)</button> -->
                 </form>
               </div>
 
