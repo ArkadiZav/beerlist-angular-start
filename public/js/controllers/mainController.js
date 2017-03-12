@@ -1,5 +1,6 @@
 app.controller('beerCtrl', ['$scope','beerService', function($scope, beerService) {
   $scope.ratings = [1, 2, 3, 4, 5]; // A variable that is intened only for the view!
+  $scope.isSortAscending = true;
 
   $scope.addBeer = function(name, style, abv, image) {
     beerService.addBeer(name, style, abv, image).then(function(beer) { // I got from the server's response a beer (to be added)
@@ -23,7 +24,7 @@ app.controller('beerCtrl', ['$scope','beerService', function($scope, beerService
   };
 
   // This is just a VIEW function
-  $scope.avg = function(beer){
+  $scope.avg = function(beer) {
     var avg = 0;
     for (var i = 0; i < beer.ratings.length; i++) {
         avg += beer.ratings[i];
@@ -32,24 +33,37 @@ app.controller('beerCtrl', ['$scope','beerService', function($scope, beerService
     return avg;
   }
 
-  $scope.addRating = function(beer_rating, $index, id) {
+  $scope.addRating = function($index, beer_rating, id) {
+    // ## When pressing "select" on select rating: we just ignore ## //
     if (typeof(beer_rating) != 'number') {
       return;
     }
-    beerService.addRating(beer_rating, id).then(function(beer) {
+    beerService.addRating($index, beer_rating, id).then(function(beer) {
         $scope.beers[$index] = beer; // the *view* beer equals the returned beer
     }, function(err) {
       console.error(err);
     });
   };
 
-  $scope.updateBeers = function($index, id) {
-    console.log("hello");
-  /*  $http.put('/beers/' + id, beerService.beers[$index]).then(function(response) {
-      beerService.getBeers();
-      console.log(response);
-    })*/
+  $scope.editBeerInfo = function(beer) {
+    beerService.editBeerInfo(beer).then(function(response) {
+      console.log("updated in controller beer");
+    }, function(err) {
+      console.error(err);
+    });
   };
+
+  $scope.sortAscending = function() {
+    console.log("asc");
+    $scope.beers.sort(function(a, b){return $scope.avg(a) - $scope.avg(b)});
+    $scope.isSortAscending = false;
+  }
+
+  $scope.sortDescending = function() {
+    console.log("desc");
+    $scope.beers.sort(function(a, b){return $scope.avg(b) - $scope.avg(a)});
+    $scope.isSortAscending = true;
+  }
 
   beerService.getBeers().then(function(beers) { // I got from the server's response beers (to be shown)
     $scope.beers = beers;

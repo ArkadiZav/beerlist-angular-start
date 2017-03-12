@@ -1,15 +1,11 @@
 app.factory('beerService', function($http) {
-  //var beers = [];
-
-  var isSortAscending = true;
-
+  var isSortAscending = false;
   //var beerService = {beers: beers, ratings: ratings, sort: isSortAscending};
-  var beerService = {sort: isSortAscending};
+  var beerService = {};
 
   beerService.getBeers = function() {
     return $http.get('/beers')
       .then(function(response) {
-        console.log("got");
         console.log(response.data);
         //angular.copy(response.data, beerService.beers); // copies the data that was received into our beers array
 
@@ -24,8 +20,6 @@ app.factory('beerService', function($http) {
 
   beerService.addBeer = function(name, style, abv, image) {
     var newBeer = {name: name, ratings:[], avg: 0, style: style, abv: abv, image_url: image};
-  //  $http.post('/beers', newBeer);
-  //  beerService.getBeers();
     return $http.post('/beers', newBeer).then(function(response) {
       return response.data;
     }, function(err) {
@@ -34,8 +28,6 @@ app.factory('beerService', function($http) {
   };
 
   beerService.removeBeer = function(id) {
-    //$http.delete('/beers/' + id);
-    //beerService.getBeers();
     return $http.delete('/beers/' + id).then(function(response) {
       return response.data;
     }, function(err) {
@@ -43,59 +35,34 @@ app.factory('beerService', function($http) {
     });
   };
 
-  beerService.addRating = function(beer_rating, id) {
-    // ## When pressing "select" on select rating: we DON'T WANT to update the database ## //
+  beerService.addRating = function($index, beer_rating, id) { // Here the beer IS NOT updated in the view, so we can't just send the beer itself as a PUT parameter
     return $http.put('/beers/' + id, {ratings: beer_rating}).then(function(response) {
       return response.data;
-    })
-  /*  var total = 0;
-    var prevAvgRating;
-    var avgRating;
-    var numOfRatings = beerService.beers[$index].ratings.length;
-    var ratings = beerService.beers[$index].ratings;
-    var newRatings = []; */
-
-    /* ###################### Making a NEW array which is BASED (NOT referencing to) on our array #################### */
-  /*  for (var i = 0; i < numOfRatings; i++) {
-      total += ratings[i];
-      newRatings.push(ratings[i]);
-    }
-
-    newRatings.push(beer_rating);
-
-    prevAvgRating = total / numOfRatings;
-    avgRating = (total + beer_rating) / (numOfRatings + 1); */
-    // ###################### WE DON'T WANT TO ALTER OUR DATA! this is the SERVER's job ####################### //
-    //beerService.beers[$index].ratings.push(beer_rating);
-    //beerService.beers[$index].avgRating = (total + beer_rating)/(numOfRatings + 1);
-  /*  $http.put('/beers/' + id, beerService.beers[$index]).then(function(response) {
-      beerService.getBeers();
-      console.log(response);
-    }) */
-    /*$http.put('/beers/' + id, {ratings: newRatings, avgRating: avgRating}).then(function(response) {
-      beerService.getBeers();
-      console.log(response);
-    }) */
+    }, function(err) {
+        console.error(err);
+    });
   };
 
-  beerService.updateBeers = function($index, id) {
-    console.log("hello");
-  /*  $http.put('/beers/' + id, beerService.beers[$index]).then(function(response) {
-      beerService.getBeers();
-      console.log(response);
-    })*/
+  beerService.editBeerInfo = function(beer) { // Here beer is already updated in the view, so we just need to apply it also to the server
+    console.log("editBeerInfo func");
+    return $http.put('/beers/' + beer._id, beer).then(function(response) {
+      return response.data;
+    }, function (err) {
+        console.error(err);
+      });
   };
 
-  beerService.sortAscending = function() {
+  /*beerService.sortAscending = function() {
+    console.log("asc");
     beerService.beers.sort(function(a, b){return a.avgRating - b.avgRating});
     beerService.isSortAscending = false;
-  };
+  }; */
 
-  beerService.sortDescending = function() {
+  /*beerService.sortDescending = function() {
+    console.log("desc");
     beerService.beers.sort(function(a, b){return b.avgRating - a.avgRating});
     beerService.isSortAscending = true;
-  };
+  }; */
 
   return beerService;
-
 });

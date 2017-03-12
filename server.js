@@ -30,41 +30,10 @@ app.get('/beers', function(req, res, next) {
   });
 });
 
-// I - client, request beers from the server, it responds with JSON of 2 beers
-/*app.get('/beers', function (req, res, next) {
-  res.json({beers: [
-    { name: '512 IPA', style: 'IPA', image_url: 'http://bit.ly/1XtmB4d', abv: 5 },
-    { name: '512 Pecan Porter', style: 'Porter', image_url: 'http://bit.ly/1Vk5xj4', abv: 4 }
-  ]});
-}); */
-
 /*=====================================================
                     POST Requests
 =======================================================*/
 app.post('/beers', function (req, res, next) {
-  /* This is another way to POST, without the POSTMAN
-  req.body.name = "512 Pecan Porter";
-  req.body.style = "Porter";
-  req.body.image_url = "http://bit.ly/1Vk5xj4";
-  req.body.abv = 4;
-  */
-
-  /* This is a "lengthy" way (POSTMAN required) of posting a beer
-  var beer = new Beer(req.body);
-
-  beer.save(function(err, beer) {
-    if (err) {
-      console.error(err)
-      return next(err);
-    } else {
-      res.json(beer);
-    }
-  }); */
-
-  /* The short way to post in POSTMAN : saves us to do:
-  1) var beer = new Beer
-  2) beer.save ...
-  with just Beer.create */
   Beer.create(req.body, function(err, beer) {
   if (err) {
     console.error(err)
@@ -93,16 +62,28 @@ app.delete('/beers/:id', function(req, res, next) {
                     PUT Requests
 =======================================================*/
 app.put('/beers/:id', function(req, res, next) {
-  Beer.findOneAndUpdate({ _id: req.params.id }, { $push: req.body}, {new: true}, function(err, beer) {
-    if (err) {
-      console.error(err);
-      return next(err);
-    } else {
-
-      console.log(beer);
-        res.send(beer);
-    }
-  });
+  // ARE we updating the ratings? ...
+  if (!("name" in req.body)) { // ONLY the ratings are a key here
+    Beer.findOneAndUpdate({ _id: req.params.id }, {$push: req.body}, {new: true}, function(err, beer) {
+      if (err) {
+        console.error(err);
+        return next(err);
+      } else {
+          res.send(beer); // sending UPDATED beer because of {new: true}
+      }
+    });
+  }
+  // OR ARE WE updating the text fields?
+  else { // every key of BEER is in here, because the *beer object* was sent here
+    Beer.findOneAndUpdate({ _id: req.params.id }, req.body, function(err, beer) {
+      if (err) {
+        console.error(err);
+        return next(err);
+      } else {
+          res.send(beer);
+      }
+    });
+  }
 });
 
 /*=====================================================
