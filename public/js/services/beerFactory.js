@@ -52,17 +52,5 @@ app.factory('beerService', function($http) {
       });
   };
 
-  /*beerService.sortAscending = function() {
-    console.log("asc");
-    beerService.beers.sort(function(a, b){return a.avgRating - b.avgRating});
-    beerService.isSortAscending = false;
-  }; */
-
-  /*beerService.sortDescending = function() {
-    console.log("desc");
-    beerService.beers.sort(function(a, b){return b.avgRating - a.avgRating});
-    beerService.isSortAscending = true;
-  }; */
-
   return beerService;
 });
