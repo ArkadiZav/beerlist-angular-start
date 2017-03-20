@@ -44,12 +44,9 @@ app.factory('beerService', function($http) {
   };
 
   beerService.editBeerInfo = function(beer) { // Here beer is already updated in the view, so we just need to apply it also to the server
-    console.log("editBeerInfo func");
     return $http.put('/beers/' + beer._id, beer).then(function(response) {
       return response.data;
-    }, function (err) {
-        console.error(err);
-      });
+    });
   };
 
   return beerService;

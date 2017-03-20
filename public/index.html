@@ -23,34 +23,46 @@
 
                      <ul class = "beer-list">
                       <li ng-repeat = "beer in beers track by $index">
-                        <button type="button" class="btn btn-danger remove-button" ng-click="removeBeer(beer._id)">Remove</button>
+                        <button type="button" class="btn btn-danger remove-button" ng-click="removeBeer($index)">Remove</button>
                         <p> Select rating: </p>
-                         <!--<select class="form-control" ng-model = "beer_rating" ng-click = ".addRating(beer_rating, $index, beer._id)">
-                           <option disabled selected hidden value = ""> Select </option>
-                           <option value="1">1</option>
-                           <option value="2">2</option>
-                           <option value="3">3</option>
-                           <option value="4">4</option>
-                           <option value="5">5</option>
-                         </select> -->
                          <select class="form-control" ng-model="beer_rating" ng-click = "addRating($index, beer_rating, beer._id)"
                          ng-options="ratings.indexOf(beer_rating) + 1 as beer_rating for beer_rating in ratings"></select>
                          <div class = "frame">
                            &nbsp;
                          </div>
                          <!-- <h3><input ng-model = "beer.name" class = "formBlur" ng-blur = "editBeerInfo(beer)"/></h3> -->
-                         <p editable-text = "beer.name" onaftersave="editBeerInfo(beer)"> Name: {{ beer.name }} </p>
-                         <p editable-text = "beer.style" onaftersave="editBeerInfo(beer)"> Style: {{ beer.style }} </p>
-                         <p editable-text = "beer.abv" onaftersave="editBeerInfo(beer)"> ABV: {{ beer.abv }}  </p>
-                         <p ng-hide = "beer.ratings.length == 0" > Average Rating: {{ avg(beer).toFixed(2) }} (by {{beer.ratings.length}} drinker(s))
-                         <p ng-show = "beer.ratings.length == 0" > Average Rating: None yet! Be the first one to rate </p>
-                         <!-- If the beer has no ratings, I want to init the avg to 0, so that the sort will work -->
-                         <div ng-if = "beer.ratings.length == 0">
-                           <div ng-init = "beer.avgRating = 0"></div>
-                         </div>
-                         <!-- ########### END OF *INIT* COMMENT  ############ -->
-                         <a href="#" class="thumb"><img class = "beer-image" ng-src="{{beer.image_url}}"></a>
 
+                         <!-- ################## This is the week7 addition to the lesson BEGIN ################ -->
+                         <!-- we don't want to display the beer whilst editing -->
+                         <!-- ###### WE DON'T SEE THIS IN EDIT MODE #####  -->
+                         <div ng-if="!tempBeer[$index]">
+                             <button type="button" class="btn btn-success edit-button" ng-click="editBeer($index)">Edit Beer</button>
+                         </div>
+                         <form ng-if="tempBeer[$index]">
+                            <!-- ###### WE SEE THIS ONLY IN EDIT MODE #####  -->
+                            <!-- all inputs are bound to the temporary beer -->
+                            <p> Name: <input type="text" ng-model="tempBeer[$index].name"> </p>
+                            <p> Style: <input type="text" ng-model="tempBeer[$index].style"> </p>
+                            <p> ABV: <input type="text" ng-model="tempBeer[$index].abv"> </p>
+                            <!-- if cancel is pressed, all we need to do is remove the tempBeer -->
+                            <button type="button" ng-click="tempBeer[$index] = null">Cancel</button>
+                            <button type="button" ng-click="updateBeer($index)">Submit</button>
+                          </form>
+                          <!-- ################## This is the week7 addition to the lesson END ################ -->
+                          <!-- ###### WE DON'T SEE THIS IN EDIT MODE #####  -->
+                          <div ng-if="!tempBeer[$index]">
+                            <p editable-text = "beer.name" onaftersave="editBeerInfo(beer)"> Name: {{ beer.name }} </p>
+                            <p editable-text = "beer.style" onaftersave="editBeerInfo(beer)"> Style: {{ beer.style }} </p>
+                            <p editable-text = "beer.abv" onaftersave="editBeerInfo(beer)"> ABV: {{ beer.abv }}% </p>
+                            <p ng-hide = "beer.ratings.length == 0" > Average Rating: {{ avg(beer).toFixed(2) }} (by {{beer.ratings.length}} drinker(s))
+                            <p ng-show = "beer.ratings.length == 0" > Average Rating: None yet! Be the first one to rate </p>
+                             <!-- If the beer has no ratings, I want to init the avg to 0, so that the sort will work -->
+                          <div ng-if = "beer.ratings.length == 0">
+                             <div ng-init = "beer.avgRating = 0"></div>
+                          </div>
+                           <!-- ########### END OF *INIT* COMMENT  ############ -->
+                           <a href="#" class="thumb"><img class = "beer-image" ng-src="{{beer.image_url}}"></a>
+                         </div>
                      </li>
                     </ul>
                   </div>

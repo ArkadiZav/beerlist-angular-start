@@ -23,7 +23,9 @@ app.use(bodyParser.json());
 app.get('/beers', function(req, res, next) {
   //res.send('Testing Server')
   Beer.find(function (error, beers) {
-    if(error) { return console.error(error); }
+    if(error) {
+      return console.error(error);
+    }
     console.log("got beers");
     console.log(beers);
     res.send(beers);
@@ -75,8 +77,9 @@ app.put('/beers/:id', function(req, res, next) {
   }
   // OR ARE WE updating the text fields?
   else { // every key of BEER is in here, because the *beer object* was sent here
-    Beer.findOneAndUpdate({ _id: req.params.id }, req.body, function(err, beer) {
+    Beer.findOneAndUpdate({ _id: req.params.id }, req.body, {new: true}, function(err, beer) {
       if (err) {
+        // If we, for instance, put a string: "al3.4" to abv field, it wil log that the cast to number failed, so it was unable to "PUT"
         console.error(err);
         return next(err);
       } else {
@@ -99,7 +102,7 @@ app.use(function(req, res, next) {
 // warning - not for use in production code!
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  res.render('error', {
+  res.send({
     message: err.message,
     error: err
   });

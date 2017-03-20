@@ -39,6 +39,7 @@ img {
   margin: -10px -1.4em 5px -1.4em;
 }
 
+.edit-button,
 .remove-button {
   float:right;
 }
