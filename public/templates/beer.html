@@ -1,0 +1,27 @@
+<div class="page-header">
+  <a ui-sref="home">Home</a>
+  <h3>
+    <span> Name: {{beer.name}},</span>
+    <span> Style: {{beer.style}},</span>
+    <span> ABV: {{beer.abv}}% </span>
+  </h3> <br/>
+  <ul>
+    <li ng-repeat = "review in beer.reviews track by $index">
+      {{review.name}}: <br /> {{review.text}} <button type="button" class="btn btn-danger remove-button" ng-click = "removeReview($index)">Remove</button>
+    </li>
+  </ul>
+
+  <form class="ng-pristine ng-valid">
+    <h2>Add a review</h2>
+    <div class="form-group">
+        <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Name" ng-model = "revname">
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Comment" ng-model = "revcomment">
+    </div>
+
+    <button type="button" class="btn btn-primary" ng-click = "addReview(revname, revcomment, beer)">Add</button>
+
+  </form>
+
+</div>

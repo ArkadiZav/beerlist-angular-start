@@ -15,6 +15,10 @@ li {
   padding: 20px;
 }
 
+h3 {
+  font-family: Wicked Mouse;
+}
+
 ul {
   list-style-type: none;
   overflow: auto;

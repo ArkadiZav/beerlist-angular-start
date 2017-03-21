@@ -8,97 +8,18 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
-<body ng-app="beerList" ng-controller = "beerCtrl">
+<body ng-app="beerList" >
     <div class="container">
-        <div class="row">
-            <div class="col-md-9 col-md-offset-1">
-                <h1 class="text-center">BeerList</h1>
-                <div class="page-header">
-                </div>
-            </div>
-          </div>
-                <!-- render beers here -->
-                <div class = "row">
-                  <div class ="col-md-12 beers">
-
-                     <ul class = "beer-list">
-                      <li ng-repeat = "beer in beers track by $index">
-                        <button type="button" class="btn btn-danger remove-button" ng-click="removeBeer($index)">Remove</button>
-                        <p> Select rating: </p>
-                         <select class="form-control" ng-model="beer_rating" ng-click = "addRating($index, beer_rating, beer._id)"
-                         ng-options="ratings.indexOf(beer_rating) + 1 as beer_rating for beer_rating in ratings"></select>
-                         <div class = "frame">
-                           &nbsp;
-                         </div>
-                         <!-- <h3><input ng-model = "beer.name" class = "formBlur" ng-blur = "editBeerInfo(beer)"/></h3> -->
-
-                         <!-- ################## This is the week7 addition to the lesson BEGIN ################ -->
-                         <!-- we don't want to display the beer whilst editing -->
-                         <!-- ###### WE DON'T SEE THIS IN EDIT MODE #####  -->
-                         <div ng-if="!tempBeer[$index]">
-                             <button type="button" class="btn btn-success edit-button" ng-click="editBeer($index)">Edit Beer</button>
-                         </div>
-                         <form ng-if="tempBeer[$index]">
-                            <!-- ###### WE SEE THIS ONLY IN EDIT MODE #####  -->
-                            <!-- all inputs are bound to the temporary beer -->
-                            <p> Name: <input type="text" ng-model="tempBeer[$index].name"> </p>
-                            <p> Style: <input type="text" ng-model="tempBeer[$index].style"> </p>
-                            <p> ABV: <input type="text" ng-model="tempBeer[$index].abv"> </p>
-                            <!-- if cancel is pressed, all we need to do is remove the tempBeer -->
-                            <button type="button" ng-click="tempBeer[$index] = null">Cancel</button>
-                            <button type="button" ng-click="updateBeer($index)">Submit</button>
-                          </form>
-                          <!-- ################## This is the week7 addition to the lesson END ################ -->
-                          <!-- ###### WE DON'T SEE THIS IN EDIT MODE #####  -->
-                          <div ng-if="!tempBeer[$index]">
-                            <p editable-text = "beer.name" onaftersave="editBeerInfo(beer)"> Name: {{ beer.name }} </p>
-                            <p editable-text = "beer.style" onaftersave="editBeerInfo(beer)"> Style: {{ beer.style }} </p>
-                            <p editable-text = "beer.abv" onaftersave="editBeerInfo(beer)"> ABV: {{ beer.abv }}% </p>
-                            <p ng-hide = "beer.ratings.length == 0" > Average Rating: {{ avg(beer).toFixed(2) }} (by {{beer.ratings.length}} drinker(s))
-                            <p ng-show = "beer.ratings.length == 0" > Average Rating: None yet! Be the first one to rate </p>
-                             <!-- If the beer has no ratings, I want to init the avg to 0, so that the sort will work -->
-                          <div ng-if = "beer.ratings.length == 0">
-                             <div ng-init = "beer.avgRating = 0"></div>
-                          </div>
-                           <!-- ########### END OF *INIT* COMMENT  ############ -->
-                           <a href="#" class="thumb"><img class = "beer-image" ng-src="{{beer.image_url}}"></a>
-                         </div>
-                     </li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div class = "row">
-                  <div> &nbsp; </div> <div> &nbsp; </div>
-              <div class ="col-md-12 beers col-md-offset-1">
-                <form>
-                    <h3>Add a new beer</h3>
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Beer Name" ng-model="name"></input>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Style" ng-model="style"></input>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="ABV" ng-model="abv"></input>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Image URL" ng-model="image"></input>
-                    </div>
-                    <button type="button" class="btn btn-primary" ng-click = "addBeer(name, style, abv, image)">Add</button>
-
-                    <button type="button" class="btn btn-success" ng-show = "isSortAscending" ng-click = "sortAscending()">Sort(ascending)</button>
-                    <button type="button" class="btn btn-success" ng-hide = "isSortAscending" ng-click = "sortDescending()">Sort(descending)</button>
-                </form>
-              </div>
-
-        </div>
+      <div ui-view>
+      </div>
     </div>
     <script src="/angular/angular.js"></script>
+    <script src="/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="/angular-xeditable/dist/js/xeditable.js"> </script>
     <script src="/js/app.js"></script>
     <script src="/js/services/beerFactory.js"></script>
     <script src="/js/controllers/mainController.js"></script>
+    <script src="/js/controllers/beerController.js"></script>
 </body>
 
 </html>

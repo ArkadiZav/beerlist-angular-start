@@ -18,6 +18,33 @@ app.factory('beerService', function($http) {
       });
   };
 
+//new server route for getting one specific beer
+  beerService.getBeer = function(id) {
+    return $http.get('/beers/' + id)
+      .then(function(response) {
+        return response.data;
+      }, function(err) {
+          console.error(err);
+      });
+  };
+
+  beerService.addReview = function(name, comment, beer) {
+    var newReview = {name: name, text: comment};
+    return $http.post('/beers/' + beer._id + '/reviews', newReview).then(function(response) {
+      return response.data;
+    }, function(err) {
+        console.error(err);
+    });
+  };
+
+  beerService.removeReview = function(reviewid, beerid) {
+    return $http.delete('/beers/' + beerid + '/reviews/' + reviewid).then(function(response) {
+      return response.data;
+    }, function(err) {
+        console.error(err);
+    });
+  };
+
   beerService.addBeer = function(name, style, abv, image) {
     var newBeer = {name: name, ratings:[], avg: 0, style: style, abv: abv, image_url: image};
     return $http.post('/beers', newBeer).then(function(response) {
