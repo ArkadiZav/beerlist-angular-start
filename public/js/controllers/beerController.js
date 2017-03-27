@@ -16,13 +16,9 @@ app.controller('beerController', ['$scope', '$stateParams', 'beerService', funct
     // The IF handles what happens if we refresh the reviews page for a specific beer
 
     $scope.addReview = function(name, comment, beer) {
-      beerService.addReview(name, comment, beer).then(function(review) { // I got from the server's response a beer (to be added)
+      beerService.addReview(name, comment, beer).then(function(review) {
       $scope.beer.reviews.push(review);
-      beerService.getBeer($stateParams.id)
-        .then(function(beer) {
-          $scope.beer = beer;
-        })
-       }, function(err) {
+      }, function(err) {
         console.error(err);
        });
     }

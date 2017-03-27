@@ -30,8 +30,10 @@ app.factory('beerService', function($http) {
 
   beerService.addReview = function(name, comment, beer) {
     var newReview = {name: name, text: comment};
-    return $http.post('/beers/' + beer._id + '/reviews', newReview).then(function(response) {
-      return response.data;
+    return $http.post('/beers/' + beer._id + '/reviews', newReview).then(function(updatedBeer) {
+      //console.log("reviews are here:");
+      //console.log(updatedBeer.data.reviews[newBeer.data.reviews.length - 1]);
+      return updatedBeer.data.reviews[updatedBeer.data.reviews.length - 1];
     }, function(err) {
         console.error(err);
     });
